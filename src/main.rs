@@ -5,14 +5,19 @@ use rand::{thread_rng, Rng};
 enum Orderin {
     Greater,
     Lesser,
-    Equal
+    Equal,
+    Other
 }
 
 fn order(secret: u8, input: &String) -> Orderin {
-    let input : u8 = input.trim().parse().unwrap();
-    if input == secret {Orderin::Equal}
-    else if input > secret {Orderin::Greater}
-    else {Orderin::Lesser}
+    match input.trim().parse::<u8>() {
+        Ok(val) => {if val <= 0 {Orderin::Other}
+                   else if val > 100 {Orderin::Other}
+                   else if val == secret {Orderin::Equal}
+                   else if val > secret {Orderin::Greater}
+                   else {Orderin::Lesser}},
+        Err(_) => Orderin::Other
+    }
 }
 
 
@@ -20,7 +25,8 @@ fn display(ord: &Orderin){
     let message = match ord {
         Orderin::Equal => "Bon nombre bravo !",
         Orderin::Greater => "Trop haut !",
-        Orderin::Lesser => "Trop bas !"
+        Orderin::Lesser => "Trop bas !",
+        Orderin::Other => "Entrée invalide veuillez entrée un nombre entre 1 et 100"
     };
     println!("{message}")
 }
